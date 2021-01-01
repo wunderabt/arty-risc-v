@@ -11,12 +11,14 @@ RUN apt-get update && \
 
 COPY Xilinx_Unified_2020.2_1118_1232_Lin64.bin /
 COPY xilinx_install_config.txt /
+COPY wi_authentication_key /root/.Xilinx/wi_authentication_key
 RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && \
     cd installer && \
 	./xsetup \
   		--agree XilinxEULA,3rdPartyEULA,WebTalkTerms \
   		--config /xilinx_install_config.txt \
   		--batch INSTALL && \
+    cd .. && \
     rm -fr xilinx_install_config.txt Xilinx_Unified_2020.2_1118_1232_Lin64.bin ./installer
 
 # # shamelessly stolen from https://www.reddit.com/r/FPGA/comments/bk8b3n/dockerizing_xilinx_tools/
