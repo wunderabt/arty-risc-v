@@ -1,1 +1,1 @@
-docker build -t risc-v:ub .
+docker build -t troi.fritz.box/risc-v:latest .
