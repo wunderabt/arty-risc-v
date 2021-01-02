@@ -1,0 +1,3 @@
+[submodule "sifive-freedom"]
+	path = sifive-freedom
+	url = https://github.com/sifive/freedom.git
