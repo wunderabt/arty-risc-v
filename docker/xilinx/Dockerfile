@@ -1,5 +1,6 @@
 FROM debian:latest
 
+# support packages for xilinx tools
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y git \
@@ -9,6 +10,7 @@ RUN apt-get update && \
     apt-get autoclean && apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
+# xilinx vivado web pack
 COPY Xilinx_Unified_2020.2_1118_1232_Lin64.bin /
 COPY xilinx_install_config.txt /
 COPY wi_authentication_key /root/.Xilinx/wi_authentication_key
@@ -20,6 +22,11 @@ RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && 
   		--batch INSTALL && \
     cd .. && \
     rm -fr xilinx_install_config.txt Xilinx_Unified_2020.2_1118_1232_Lin64.bin ./installer
+
+# additional board files
+RUN git clone https://github.com/Digilent/vivado-boards.git && \
+    tar -C vivado-boards/new/board_files -c . | tar -C /tools/Xilinx/Vivado/2020.2/data/boards/board_files -xf - && \
+    rm -fr vivado-boards
 
 # # shamelessly stolen from https://www.reddit.com/r/FPGA/comments/bk8b3n/dockerizing_xilinx_tools/
 # RUN cd $XLNX_INSTALL_LOCATION/tmp \
