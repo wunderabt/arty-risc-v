@@ -4,5 +4,6 @@ docker run --rm \
            -v /:/host \
            -e DISPLAY \
            -u $(id -u) \
+           -e HOME=/host${HOME} \
            -it \
            troi.fritz.box/risc-v:latest bash
