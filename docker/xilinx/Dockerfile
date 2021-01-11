@@ -10,10 +10,12 @@ RUN apt-get update && \
     apt-get autoclean && apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
-# xilinx vivado web pack
+# xilinx vivado web pack, download this from Xilinx
 COPY Xilinx_Unified_2020.2_1118_1232_Lin64.bin /
 COPY xilinx_install_config.txt /
-# HINT: add your own token before building the image
+# HINT: add your own token before building the image,
+#       run ./Xilinx_Unified_2020.2_1118_1232_Lin64.bin -- --batch AuthTokenGen
+#           cp ~/.Xilinx/wi_authentication_key .
 COPY wi_authentication_key /root/.Xilinx/wi_authentication_key
 RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && \
     cd installer && \
@@ -22,7 +24,10 @@ RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && 
   		--config /xilinx_install_config.txt \
   		--batch INSTALL && \
     cd .. && \
-    rm -fr xilinx_install_config.txt Xilinx_Unified_2020.2_1118_1232_Lin64.bin ./installer
+    rm -fr xilinx_install_config.txt Xilinx_Unified_2020.2_1118_1232_Lin64.bin ./installer /tools/Xilinx/.xinstall /root/.Xilinx/wi_authentication_key
+
+# workaround for libtinfo.so.5 dependency of vivado
+RUN cd /lib/x86_64-linux-gnu && ln -s libtinfo.so.6 libtinfo.so.5
 
 # additional board files for vivado
 RUN git clone https://github.com/Digilent/vivado-boards.git && \
@@ -41,7 +46,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # verilator
-RUN apt-get update && apt-get install -y git make autoconf g++ flex bison && \
+RUN apt-get update && apt-get install -y git make autoconf g++ flex bison python3 && \
     git clone http://git.veripool.org/git/verilator && \
     cd verilator && \
     git checkout stable && \
