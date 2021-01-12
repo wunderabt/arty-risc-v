@@ -1,3 +1,4 @@
+# syntax = docker/dockerfile:1.0-experimental
 FROM debian:latest
 
 # support packages for xilinx tools
@@ -16,15 +17,15 @@ COPY xilinx_install_config.txt /
 # HINT: add your own token before building the image,
 #       run ./Xilinx_Unified_2020.2_1118_1232_Lin64.bin -- --batch AuthTokenGen
 #           cp ~/.Xilinx/wi_authentication_key .
-COPY wi_authentication_key /root/.Xilinx/wi_authentication_key
-RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && \
+RUN --mount=type=secret,id=xilinx_token,dst=/root/.Xilinx/wi_authentication_key \
+    /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && \
     cd installer && \
 	./xsetup \
   		--agree XilinxEULA,3rdPartyEULA,WebTalkTerms \
   		--config /xilinx_install_config.txt \
   		--batch INSTALL && \
     cd .. && \
-    rm -fr xilinx_install_config.txt Xilinx_Unified_2020.2_1118_1232_Lin64.bin ./installer /tools/Xilinx/.xinstall /root/.Xilinx/wi_authentication_key
+    rm -fr xilinx_install_config.txt Xilinx_Unified_2020.2_1118_1232_Lin64.bin ./installer /tools/Xilinx/.xinstall
 
 # workaround for libtinfo.so.5 dependency of vivado
 RUN cd /lib/x86_64-linux-gnu && ln -s libtinfo.so.6 libtinfo.so.5
