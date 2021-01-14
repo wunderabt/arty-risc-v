@@ -1,3 +1,6 @@
 [submodule "sifive-freedom"]
 	path = sifive-freedom
 	url = https://github.com/sifive/freedom.git
+[submodule "digilent-xdc"]
+	path = digilent-xdc
+	url = https://github.com/Digilent/digilent-xdc.git
