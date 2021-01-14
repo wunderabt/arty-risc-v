@@ -8,4 +8,4 @@ docker run --rm \
            -e HOME=/host${HOME} \
            -w /host$(pwd) \
            -it \
-           troi.fritz.box/vivado:latest /bin/bash
+           troi.fritz.box/risc-v:latest /bin/bash
