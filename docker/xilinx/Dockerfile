@@ -45,11 +45,19 @@ COPY --from=vivado_install /tools/Xilinx /tools/Xilinx
 
 # workaround for libtinfo.so.5 dependency of vivado
 RUN cd /lib/x86_64-linux-gnu && ln -s libtinfo.so.6 libtinfo.so.5
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+RUN echo "source /tools/Xilinx/Vivado/2020.2/settings64.sh" >> /etc/bash.bashrc
 
 # additional Digilent board files for vivado (e.g. Arty A7)
 RUN git clone https://github.com/Digilent/vivado-boards.git && \
     tar -C vivado-boards/new/board_files -c . | tar -C /tools/Xilinx/Vivado/2020.2/data/boards/board_files -xf - && \
     rm -fr vivado-boards
+
+RUN apt-get update && \
+    apt-get install -y usbutils && \
+    apt-get autoclean && apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/*
 
 # check hints from https://www.reddit.com/r/FPGA/comments/bk8b3n/dockerizing_xilinx_tools/
 #                  https://github.com/phwl/docker-vivado

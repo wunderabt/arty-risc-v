@@ -7,5 +7,6 @@ docker run --rm \
            -u $(id -u) \
            -e HOME=/host${HOME} \
            -w /host$(pwd) \
+           --privileged \
            -it \
            troi.fritz.box/vivado:latest /bin/bash
