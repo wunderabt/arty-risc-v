@@ -13,9 +13,8 @@ RUN apt-get update && \
 
 # verilator
 RUN apt-get update && apt-get install -y git make autoconf g++ flex bison python3 && \
-    git clone http://git.veripool.org/git/verilator && \
+    git clone -b stable https://github.com/verilator/verilator.git && \
     cd verilator && \
-    git checkout stable && \
     autoconf && \
     ./configure && \
     make -j $(nproc) && \
