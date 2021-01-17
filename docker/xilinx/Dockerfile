@@ -45,6 +45,7 @@ COPY --from=vivado_install /tools/Xilinx /tools/Xilinx
 
 # workaround for libtinfo.so.5 dependency of vivado
 RUN cd /lib/x86_64-linux-gnu && ln -s libtinfo.so.6 libtinfo.so.5
+# cs_server needs the UTF-8 env vars
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 RUN echo "source /tools/Xilinx/Vivado/2020.2/settings64.sh" >> /etc/bash.bashrc
