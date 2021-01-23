@@ -1,4 +1,12 @@
 #!/bin/bash
+
+image_name="troi.fritz.box/risc-v:latest"
+
+docker build --tag ${image_name}_${USER} -<<EOF
+FROM ${image_name}
+RUN useradd --uid $(id -u) --home /host/${HOME} ${USER}
+EOF
+
 docker run --rm \
            --network host \
            -v /tmp/.X11-unix:/tmp/.X11-unix \
@@ -9,4 +17,4 @@ docker run --rm \
            -w /host$(pwd) \
            --privileged \
            -it \
-           troi.fritz.box/risc-v:latest /bin/bash
+           ${image_name}_${USER} /bin/bash
