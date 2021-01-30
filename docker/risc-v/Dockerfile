@@ -13,11 +13,6 @@ RUN apt-get update && \
     apt-get autoclean && apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
 
-# risc-v embedded toolchain
-ENV RISCV=/tools/risc-v/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14
-RUN mkdir -p /tools/risc-v && cd /tools/risc-v && \
-    curl https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz | tar xz
-
 # verilator
 RUN apt-get update && apt-get install -y git make autoconf g++ flex bison python python3 && \
     git clone -b ${VERILATOR_VERSION} https://github.com/verilator/verilator.git && \
@@ -29,3 +24,17 @@ RUN apt-get update && apt-get install -y git make autoconf g++ flex bison python
     cd .. && rm -fr verilator && \
     apt-get autoclean && apt-get autoremove && \
     rm -rf /var/lib/apt/lists/*
+
+# SiFive Freedom Studio
+RUN apt-get update && \
+    apt-get install -y dbus-x11 && \
+    apt-get autoclean && apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /tools/sifive && cd /tools/sifive && \
+    curl https://static.dev.sifive.com/dev-tools/FreedomStudio/2020.11/FreedomStudio-4.7.2.2020-11-3-x86_64-linux-ubuntu14.tar.gz | tar xz
+
+## risc-v embedded toolchain
+# ub: currently not using rv64
+#ENV RISCV=/tools/risc-v/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14
+#RUN mkdir -p /tools/risc-v && cd /tools/risc-v && \
+#    curl https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz | tar xz
