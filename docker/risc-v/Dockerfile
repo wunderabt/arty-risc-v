@@ -34,7 +34,6 @@ RUN apt-get update && \
     curl https://static.dev.sifive.com/dev-tools/FreedomStudio/2020.11/FreedomStudio-4.7.2.2020-11-3-x86_64-linux-ubuntu14.tar.gz | tar xz
 
 ## risc-v embedded toolchain
-# ub: currently not using rv64
-#ENV RISCV=/tools/risc-v/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14
-#RUN mkdir -p /tools/risc-v && cd /tools/risc-v && \
-#    curl https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz | tar xz
+ENV RISCV=/tools/risc-v/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14
+RUN mkdir -p /tools/risc-v && cd /tools/risc-v && \
+    curl https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz | tar xz
