@@ -4,3 +4,6 @@
 [submodule "digilent-xdc"]
 	path = digilent-xdc
 	url = https://github.com/Digilent/digilent-xdc.git
+[submodule "freedom-e-sdk"]
+	path = freedom-e-sdk
+	url = https://github.com/sifive/freedom-e-sdk.git
