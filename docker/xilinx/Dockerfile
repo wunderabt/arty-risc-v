@@ -12,13 +12,15 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # xilinx vivado web pack, download this from Xilinx
-COPY Xilinx_Unified_2020.2_1118_1232_Lin64.bin /
+COPY Xilinx_Unified_2021.1_0610_2318_Lin64.bin /
 COPY xilinx_install_config.txt /
 # HINT: add your own token before building the image,
-#       run ./Xilinx_Unified_2020.2_1118_1232_Lin64.bin -- --batch AuthTokenGen
+#       run ./Xilinx_Unified_2021.1_0610_2318_Lin64.bin -- --batch AuthTokenGen
 #           cp ~/.Xilinx/wi_authentication_key .
+#       update config file with new options ./Xilinx_Unified_2021.1_0610_2318_Lin64.bin -- --batch ConfigGen
+#           cp ~/.Xilinx/install_config.txt xilinx_install_config.txt
 COPY wi_authentication_key /root/.Xilinx/wi_authentication_key
-RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && \
+RUN /Xilinx_Unified_2021.1_0610_2318_Lin64.bin --noexec --target ./installer && \
     cd installer && \
 	./xsetup \
   		--agree XilinxEULA,3rdPartyEULA,WebTalkTerms \
@@ -36,6 +38,7 @@ FROM debian:latest
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y git \
+                       locales-all \
                        device-tree-compiler \
                        default-jre \
                        openjdk-11-jdk && \
@@ -48,11 +51,12 @@ RUN cd /lib/x86_64-linux-gnu && ln -s libtinfo.so.6 libtinfo.so.5
 # cs_server needs the UTF-8 env vars
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-RUN echo "source /tools/Xilinx/Vivado/2020.2/settings64.sh" >> /etc/bash.bashrc
+RUN echo "source /tools/Xilinx/Vivado/2021.1/settings64.sh" >> /etc/bash.bashrc
 
 # additional Digilent board files for vivado (e.g. Arty A7)
 RUN git clone https://github.com/Digilent/vivado-boards.git && \
-    tar -C vivado-boards/new/board_files -c . | tar -C /tools/Xilinx/Vivado/2020.2/data/boards/board_files -xf - && \
+    mkdir -p /tools/Xilinx/Vivado/2021.1/data/boards/board_files && \
+    tar -C vivado-boards/new/board_files -c . | tar -C /tools/Xilinx/Vivado/2021.1/data/boards/board_files -xf - && \
     rm -fr vivado-boards
 
 RUN apt-get update && \
