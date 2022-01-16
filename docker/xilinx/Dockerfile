@@ -12,16 +12,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # xilinx vivado web pack, download this from Xilinx
-COPY Xilinx_Unified_2020.2_1118_1232_Lin64.bin /
+COPY Xilinx_Unified_2021.2_1021_0703_Lin64.bin /
 COPY xilinx_install_config.txt /
 # HINT: add your own token before building the image,
-#       run ./Xilinx_Unified_2020.2_1118_1232_Lin64.bin -- --batch AuthTokenGen
+#       run ./Xilinx_Unified_2021.2_1021_0703_Lin64.bin -- --batch AuthTokenGen
 #           cp ~/.Xilinx/wi_authentication_key .
 COPY wi_authentication_key /root/.Xilinx/wi_authentication_key
-RUN /Xilinx_Unified_2020.2_1118_1232_Lin64.bin --noexec --target ./installer && \
+RUN /Xilinx_Unified_2021.2_1021_0703_Lin64.bin --noexec --target ./installer && \
     cd installer && \
 	./xsetup \
-  		--agree XilinxEULA,3rdPartyEULA,WebTalkTerms \
+  		--agree XilinxEULA,3rdPartyEULA \
   		--config /xilinx_install_config.txt \
   		--batch INSTALL && \
     cd .. && \
