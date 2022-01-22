@@ -1,5 +1,7 @@
 # Risc-V experiments on Arty A7
 
+![ARTY A7-100 board](arty_a7_board.jpg "arty a7-100 board")
+
 ## links
 
 ### Tools
@@ -49,6 +51,8 @@ $ vivado
 
 ## Level 1 - run "Hello World" on synthesized E310 core
 
+### prepare tools
+
 build the docker image with the SiFive toolchain
 
 ```bash
@@ -56,9 +60,57 @@ $ cd docker/risc-v
 $ ./build.sh
 ```
 
-build verilog and synthesize design
+### build verilog and synthesize design
+
+If using the Arty A7 100 Board set the board type accordingly
+```diff
+diff --git a/Makefile.e300artydevkit b/Makefile.e300artydevkit
+index 110c08a..3476a60 100644
+--- a/Makefile.e300artydevkit
++++ b/Makefile.e300artydevkit
+@@ -6,7 +6,7 @@ MODEL := E300ArtyDevKitFPGAChip
+ PROJECT := sifive.freedom.everywhere.e300artydevkit
+ export CONFIG_PROJECT := sifive.freedom.everywhere.e300artydevkit
+ export CONFIG := E300ArtyDevKitConfig
+-export BOARD := arty
++export BOARD := arty_a7_100
+ export BOOTROM_DIR := $(base_dir)/bootrom/xip
+ 
+ rocketchip_dir := $(base_dir)/rocket-chip
+```
+
+Run the risc-v docker image and build the verilog sources from the chisel sources:
 
 ```bash
-$
-$ # set Arty Board type
+$ docker/risc-v/run.sh
+$ . clean.sh
+$ cd sifive-freedom
+$ make -f Makefile.e300artydevkit verilog
 ```
+
+The verilog should be in `builds/e300artydevkit/sifive.freedom.everywhere.e300artydevkit.E300ArtyDevKitConfig.v`
+
+Synthesize the verilog for the FPGA (still in the risc-v docker)
+
+```bash
+$ make -f Makefile.e300artydevkit mcs
+```
+
+after which the output is in `builds/e300artydevkit/obj`.
+
+### Program the FPGA:
+
+1. Open Vivado, go to "Flow -> Open Hardware Manager"
+1. "Open Target -> Auto connect"
+1. select device xc7a100t_0, right click "Add Configuration Memory Device" and select alias s25fl127s-spi-x1_x2_x4
+1. select OK when asked if you want to program the configuration and select the .mcs from the obj directory
+1. when programming the FPGA was successful, press the "PROG" button on the FPGA board
+
+### build the Hello World
+
+1. connect the Olimex to JD of the FPGA board
+1. change to the `freedom-e-sdk` directory
+1. `make BSP=metal PROGRAM=hello TARGET=freedom-e310-arty clean`
+1. `make BSP=metal PROGRAM=hello TARGET=freedom-e310-arty software`
+1. `make BSP=metal PROGRAM=hello TARGET=freedom-e310-arty upload`
+1. `tio /dev/ttyUSB0 -b 57600` should show "Hello World!" now
