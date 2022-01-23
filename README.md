@@ -9,7 +9,7 @@
 - [chisel bootcamp](https://riscv.org/wp-content/uploads/2015/01/riscv-chisel-tutorial-bootcamp-jan2015.pdf)
 - [chisel homepage](https://www.chisel-lang.org/)
 
-### Arty A7 Tutorials
+### Arty A7 Risc-V Tutorials
 
 - [DigiKey](https://www.digikey.com/eewiki/display/LOGIC/Digilent+Arty+A7+with+Xilinx+Artix-7+Implementing+SiFive+FE310+RISC-V)
 - [Digilent](https://reference.digilentinc.com/reference/programmable-logic/arty-a7/arty_a7_100_risc_v/start)
@@ -108,9 +108,22 @@ after which the output is in `builds/e300artydevkit/obj`.
 
 ### build the Hello World
 
-1. connect the Olimex to JD of the FPGA board
+1. connect the Olimex to JD of the FPGA board (see the adapter in the `pcb` directory)
 1. change to the `freedom-e-sdk` directory
+1. upgrade `typed-ast` to 1.5.x in `requirements.txt` (the python version in the docker image is too recent and no `typed-ast` package exists for it on pypi.org)
 1. `make BSP=metal PROGRAM=hello TARGET=freedom-e310-arty clean`
 1. `make BSP=metal PROGRAM=hello TARGET=freedom-e310-arty software`
 1. `make BSP=metal PROGRAM=hello TARGET=freedom-e310-arty upload`
 1. `tio /dev/ttyUSB0 -b 57600` should show "Hello World!" now
+
+## Level 2 - remote FPGA programming
+
+An old Asus eee pc is often used on my lab bench to control powersupplies or log data from measurement instruments. I tend to connect the FPGA board to it too. However, its CPU and RAM are too tiny to run Vivado at reasonable speed. But it can run Vivavdos `hw_server` without problems.
+
+On the lab PC run
+```bash
+$ docker/risc-v/run.sh
+$ /tools/Xilinx/Vivado/2021.2/bin/hw_server
+```
+
+Start the hardware manager on the Vivado workstation and connect to the lab PC.
